@@ -185,6 +185,7 @@ class DocumentController extends Controller
         //store the actual document and version
         $user = Auth::user();
         $updated_by = $user->id;
+        $created_by = $user->id;
         $version_name = $document->document_name.Carbon::now();
         $file = $request->file('document');
 
@@ -204,6 +205,7 @@ class DocumentController extends Controller
             'physical_path' => $destinationPath."/".$version_name,
             'file_size' => $file_size,
             'updated_by' => $updated_by,
+            'created_by' => $created_by,
             'main_file' => true
         ]);
         $document_version->save();
