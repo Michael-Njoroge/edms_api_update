@@ -14,7 +14,7 @@ class GroupPermissionController extends Controller
      */
     public function index()
     {
-        if (!$this->CheckPermission("view_group_permissions", 1)) {
+        if (!$this->CheckPermission("view_group_permissions", 2)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $groupPermissions = GroupPermission::with('group')->with('group.users')->paginate(20);
@@ -28,7 +28,7 @@ class GroupPermissionController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$this->CheckPermission("add_group_permission", 1)) {
+        if (!$this->CheckPermission("add_group_permission", 2)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $input = $request->all();
@@ -53,7 +53,7 @@ class GroupPermissionController extends Controller
      */
     public function show(string $id)
     {
-        if (!$this->CheckPermission("view_group_permission", 1)) {
+        if (!$this->CheckPermission("view_group_permission", 2)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $groupPermission = GroupPermission::with('group')->with('group.users')->find($id);
@@ -71,7 +71,7 @@ class GroupPermissionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if (!$this->CheckPermission("update_group_permission", 1)) {
+        if (!$this->CheckPermission("update_group_permission", 2)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $validator = Validator::make($request->all(), [
@@ -100,7 +100,7 @@ class GroupPermissionController extends Controller
      */
     public function destroy(string $id)
     {
-        if (!$this->CheckPermission("delete_group_permission", 1)) {
+        if (!$this->CheckPermission("delete_group_permission", 2)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         GroupPermission::find($id)->delete();

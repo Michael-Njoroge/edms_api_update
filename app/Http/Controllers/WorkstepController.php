@@ -45,7 +45,7 @@ class WorkstepController extends Controller
         }
         $validator = Validator::make($input, [
             'workstep_type' => 'required|max:255',
-            'action' => 'required',
+            'activity' => 'required',
             'previous' => 'required',
             'folder_id' => 'required',
 
@@ -107,9 +107,8 @@ class WorkstepController extends Controller
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $validator = Validator::make($input, [
-            'type' => 'required|max:255',
-            'folder_id' => 'required',
-            'action' => 'required',
+             'folder_id' => 'required',
+            'activity' => 'required',
             'previous' => 'required'
         ]);
 
@@ -117,9 +116,8 @@ class WorkstepController extends Controller
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $workstep->type = $input['type'];
-        $workstep->folder_id = $input['folder_id'];
-        $workstep->action_id = $input['action_id'];
+         $workstep->folder_id = $input['folder_id'];
+        $workstep->activity = $input['activity'];
         $workstep->previous = $input['previous'];
 
         $workstep->save();

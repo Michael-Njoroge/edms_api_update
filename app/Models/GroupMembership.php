@@ -27,7 +27,7 @@ class GroupMembership extends Model
     /**
      * Get the user that owns membership.
      */
-    public function user(): BelongsTo
+    public function users(): BelongsTo
     {
         return $this->belongsTo(Group::class);
     }
