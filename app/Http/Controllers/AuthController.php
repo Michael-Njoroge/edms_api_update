@@ -17,7 +17,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
     /**
@@ -38,11 +38,12 @@ class AuthController extends Controller
             'sAMAccountName' => $request->input('username'),  
             'password' => $request->input('password'), 
         ];
+        
 // dd($credentials);
         if (!$token = auth()->attempt($credentials)) {
             return response()->json([
                 'status' => 'false',
-                'error' => 'Unauthorized'], 401);
+                'message' => 'Unauthorized']);
         }
         return $this->respondWithToken($token);
     }
@@ -91,14 +92,12 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        $cookie = Cookie::make('jwt', $token, 60);
+        $cookie = Cookie::make('jwt', $token, null);
         return response()->json([
             'status' => 'success',
             'access_token' => $token,
-            'authorisation' => [
-            'type' => 'bearer token'
-            ],
-            'expires_in' => Auth::factory()->getTTL() * 60
+            'type' => 'bearer',
+            'expires_in' => 'never expires'
         ])->withCookie($cookie);
     }
 }

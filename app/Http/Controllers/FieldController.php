@@ -149,7 +149,7 @@ class FieldController extends Controller
             return $this->sendError('Folder does not exist');
         }
 
-        if (!$this->CheckPermission("delete_field", $folder->id)) {
+        if (!$this->CheckPermission("delete_fields", $folder->id)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $field->delete();

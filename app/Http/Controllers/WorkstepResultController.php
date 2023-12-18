@@ -158,9 +158,9 @@ class WorkstepResultController extends Controller
         $workstepresult->save();
 
         // move the document to the folder of the previous workstep to be processed again
-        $possibleaction = PossibleAction::with('workstep')->find($workstepresult->action_id);
+        $possibleaction = PossibleAction::find($workstepresult->action_id)->with('workstep');
         $document = Document::find($input['document_id']);
-        // $document->folder_id = $possibleaction->workstep->previous;
+        $document->folder_id = $possibleaction->workstep->previous;
         $document->save();
 
         return $this->sendResponse(WorkstepResultResource::make($workstepresult)

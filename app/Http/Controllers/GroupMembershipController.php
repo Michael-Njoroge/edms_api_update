@@ -14,7 +14,7 @@ class GroupMembershipController extends Controller
      */
     public function index()
     {
-        if (!$this->CheckPermission("view_group_memberships", 2)) {
+        if (!$this->CheckPermission("view_group_memberships", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $groupmemberships = GroupMembership::paginate(20);
@@ -28,7 +28,7 @@ class GroupMembershipController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$this->CheckPermission("add_group_membership", 2)) {
+        if (!$this->CheckPermission("add_group_membership", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $input = $request->all();
@@ -53,10 +53,10 @@ class GroupMembershipController extends Controller
      */
     public function show(string $id)
     {
-        if (!$this->CheckPermission("view_group_membership", 2)) {
+        if (!$this->CheckPermission("view_group_membership", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
-        $groupmembership = GroupMembership::with('users')->find($id);
+        $groupmembership = GroupMembership::with('permissions')->with('users')->find($id);
 
         if (is_null($groupmembership)) {
             return $this->sendError('Group Membership not found.');
@@ -71,7 +71,7 @@ class GroupMembershipController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if (!$this->CheckPermission("update_group_membership", 2)) {
+        if (!$this->CheckPermission("update_group_membership", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $input = $request->all();
@@ -103,7 +103,7 @@ class GroupMembershipController extends Controller
      */
     public function destroy(string $id)
     {
-        if (!$this->CheckPermission("delete_group_membership", 2)) {
+        if (!$this->CheckPermission("delete_group_membership", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         GroupMembership::find($id)->delete();

@@ -59,7 +59,13 @@ class DocumentController extends Controller
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'document_name' => 'required|max:255',
+<<<<<<< HEAD
+         ]);
+=======
+            'document' => 'required|file',
+            'version' => 'required|integer'
         ]);
+>>>>>>> refs/remotes/origin/master
 
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
@@ -82,7 +88,9 @@ class DocumentController extends Controller
         $user = Auth::user();
         $updated_by = $user->id;
         $created_by = $user->id;
-        $version_name = $document->document_name.Carbon::now();
+//        $version_name = $document->document_name.Carbon::now();
+//        $version_name = "V_".$input['version'];
+        $version_name = (int)$input['version']+0.1;
         $file = $request->file('document');
 
         //File Name
@@ -107,7 +115,7 @@ class DocumentController extends Controller
         $document_version->save();
 
         return $this->sendResponse(DocumentResource::make($document)
-        ->response()->getData(true), 'Document created successfully.');
+        ->response()->getData(true), 'Document Uploaded successfully.');
     }
 
     /**
@@ -163,15 +171,20 @@ class DocumentController extends Controller
             return $this->sendError('Folder does not exist');
         }
 
-        if ((!$this->CheckPermission("add_document", $new_folder->id) 
-                && $new_folder->id != $old_folder->id) 
+        if ((!$this->CheckPermission("add_document", $new_folder->id)
+                && $new_folder->id != $old_folder->id)
                     || !$this->CheckPermission("update_document", $old_folder->id)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $validator = Validator::make($input, [
             'folder_id' => 'required',
-            'document_name' => 'required|max:255'
+            'document_name' => 'required|max:255',
+<<<<<<< HEAD
+         ]);
+=======
+            'document' => 'required|file'
         ]);
+>>>>>>> refs/remotes/origin/master
 
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
@@ -186,7 +199,15 @@ class DocumentController extends Controller
         $user = Auth::user();
         $updated_by = $user->id;
         $created_by = $user->id;
-        $version_name = $document->document_name.Carbon::now();
+
+        $previous_document_version = DocumentVersion::where('document_id', '=', $document->folder_id)->orderBy('updated_at','DESC')->first();
+        if($input['version'] != $previous_document_version->version_name)
+        {
+            $version_name = (int)$previous_document_version->version_name+0.1;
+        }else{
+            $version_name = (int)$input['version']+0.1;
+        }
+//        $version_name = $document->document_name.Carbon::now();
         $file = $request->file('document');
 
         //File Name
@@ -210,7 +231,7 @@ class DocumentController extends Controller
         ]);
         $document_version->save();
         return $this->sendResponse(DocumentResource::make($document)
-        ->response()->getData(true), 'Document updated successfully.');
+        ->response()->getData(true), 'Document Re-Uploaded Successfully.');
     }
 
     /**
@@ -233,7 +254,7 @@ class DocumentController extends Controller
         }
         $document->delete();
 
-        return $this->sendResponse([], 'Document deleted successfully.');
+        return $this->sendResponse([], 'Document Deleted Successfully.');
     }
 
     /**
@@ -257,7 +278,7 @@ class DocumentController extends Controller
 
         $document_version->main_file = true;
         $document_version->save();
-        
+
         return $this->sendResponse(DocumentResource::make($document_version->document)
         ->response()->getData(true), 'Document main version set successfully.');
     }

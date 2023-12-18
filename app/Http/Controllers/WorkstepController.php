@@ -66,7 +66,7 @@ class WorkstepController extends Controller
      */
     public function show(string $id)
     {
-        $workstep= Workstep::with('possible_actions')->with('folder')->find($id);
+        $workstep= Workstep:: with('folder')->find($id);
 
         if (is_null($workstep)) {
             return $this->sendError('Workstep not found.');
@@ -107,7 +107,8 @@ class WorkstepController extends Controller
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $validator = Validator::make($input, [
-             'folder_id' => 'required',
+            'type' => 'required|max:255',
+            'folder_id' => 'required',
             'activity' => 'required',
             'previous' => 'required'
         ]);
@@ -116,7 +117,8 @@ class WorkstepController extends Controller
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-         $workstep->folder_id = $input['folder_id'];
+        $workstep->workstep_type = $input['type'];
+        $workstep->folder_id = $input['folder_id'];
         $workstep->activity = $input['activity'];
         $workstep->previous = $input['previous'];
 

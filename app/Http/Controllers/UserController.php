@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (!$this->CheckPermission("view_users", 2)) {
+        if (!$this->CheckPermission("view_users", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $users = User::with('groups')->with('groups.permissions')->paginate(20);
@@ -28,7 +28,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$this->CheckPermission("add_user", 2)) {
+        if (!$this->CheckPermission("add_user", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $input = $request->all();
@@ -52,7 +52,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        if (!$this->CheckPermission("view_user", 2)) {
+        if (!$this->CheckPermission("view_user", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $user = User::with('groups')->with('groups.permissions')->find($id);
@@ -70,13 +70,13 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if (!$this->CheckPermission("update_user", 2)) {
+        if (!$this->CheckPermission("update_user", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $input = $request->all();
 
         $validator = Validator::make($input, [
-            'username' => 'required',
+            'external_user_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -88,7 +88,7 @@ class UserController extends Controller
         if (is_null($user)) {
             return $this->sendError('User not found.');
         }
-        $user->username = $input['username'];
+        $user->external_user_id = $input['external_user_id'];
         $user->save();
 
         return $this->sendResponse(UserResource::make($user)
@@ -100,7 +100,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        if (!$this->CheckPermission("delete_user", 2)) {
+        if (!$this->CheckPermission("delete_user", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         User::find($id)->delete();

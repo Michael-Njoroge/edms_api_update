@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('workstep_id');
             $table->unsignedBigInteger('action_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('value');
+            $table->unsignedBigInteger('value');
             $table->timestamps();
 
             $table->foreign('workstep_id')->references('id')->on('work_steps');
